@@ -143,6 +143,22 @@ public class LocalAudioAPIRouting {
         SimpleSQLiteQuery query = new SimpleSQLiteQuery(queryString, args.toArray());
         List<Entry> entries = entryDao.getSources(query);
 
+        // Post processing for if its a kanji word, then prioritize entries that *don't* have a NULL reading:
+        if (!term.equals(reading)) {
+            // Test
+            ArrayList<Entry> out_entries = new ArrayList<Entry>();
+            ArrayList<Entry> null_entries = new ArrayList<Entry>();
+            for (Entry entry : entries) {
+                if (entry.reading != null) {
+                    out_entries.add(entry);
+                } else {
+                    null_entries.add(entry);
+                }
+            }
+            entries = out_entries;
+            entries.addAll(null_entries);
+        }
+
         for (Entry entry : entries) {
             String source = entry.source;
             String file = entry.file;
