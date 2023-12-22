@@ -29,9 +29,8 @@ public class LocalAudioSource {
         builder.scheme("http")
                 .encodedAuthority(NETLOC) // encoded to not escape the : character
                 .appendPath("localaudio")
-                .appendPath(sourceID)
-                .appendPath(filePath);
-        String uri = builder.build().toString();
+                .appendPath(sourceID);
+        String uri = builder.build().toString() + "/" + filePath;
         return uri;
     }
 }
